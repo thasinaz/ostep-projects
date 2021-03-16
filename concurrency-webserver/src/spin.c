@@ -26,13 +26,13 @@ int main(int argc, char *argv[]) {
     double spin_for = 0.0;
     char *buf;
     if ((buf = getenv("QUERY_STRING")) != NULL) {
-	// just expecting a single number
-	spin_for = (double) atoi(buf);
+        // just expecting a single number
+        spin_for = (double) atoi(buf);
     }
 
     double t1 = get_seconds();
     while ((get_seconds() - t1) < spin_for)
-	sleep(1);
+        sleep(1);
     double t2 = get_seconds();
     
     /* Make the response body */

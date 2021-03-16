@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <pthread.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdio.h>
@@ -78,6 +79,20 @@ typedef struct sockaddr sockaddr_t;
     ({ struct hostent *p = gethostbyname(name); assert(p != NULL); p; })
 #define gethostbyaddr_or_die(addr, len, type) \
     ({ struct hostent *p = gethostbyaddr(addr, len, type); assert(p != NULL); p; })
+#define malloc_or_die(size) \
+    ({ void *ptr = malloc(size); assert(ptr != NULL); ptr; })
+#define pthread_mutex_lock_or_die(mutex) \
+    ({ int rc = pthread_mutex_lock(mutex); assert(rc == 0); rc; })
+#define pthread_mutex_unlock_or_die(mutex) \
+    ({ int rc = pthread_mutex_unlock(mutex); assert(rc == 0); rc; })
+#define pthread_cond_signal_or_die(cond) \
+    ({ int rc = pthread_cond_signal(cond); assert(rc == 0); rc; })
+#define pthread_cond_wait_or_die(cond, mutex) \
+    ({ int rc = pthread_cond_wait(cond, mutex); assert(rc == 0); rc; })
+#define pthread_create_or_die(thread, attr, routine, arg) \
+    ({ int rc = pthread_create(thread, attr, routine, arg); assert(rc == 0); rc; })
+#define pthread_detach_or_die(thread) \
+    ({ int rc = pthread_detach(thread); assert(rc == 0); rc; })
 
 // client/server helper functions 
 ssize_t readline(int fd, void *buf, size_t maxlen);
