@@ -36,6 +36,7 @@ void request_error(int fd, char *cause, char *errnum, char *shortmsg, char *long
     
     // Write out the body last
     write_or_die(fd, body, strlen(body));
+    close_or_die(fd);
 }
 
 //

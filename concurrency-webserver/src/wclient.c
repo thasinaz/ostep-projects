@@ -20,6 +20,7 @@
 //
 
 #include "io_helper.h"
+#include <stdio.h>
 
 #define MAXBUF (8192)
 
@@ -43,7 +44,7 @@ void client_send(int fd, char *filename) {
 //
 void client_print(int fd) {
     char buf[MAXBUF];  
-    int n;
+    int n, length;
     
     // Read and display the HTTP Header 
     n = readline_or_die(fd, buf, MAXBUF);
@@ -52,17 +53,16 @@ void client_print(int fd) {
         n = readline_or_die(fd, buf, MAXBUF);
         
         // If you want to look for certain HTTP tags... 
-        // int length = 0;
-        //if (sscanf(buf, "Content-Length: %d ", &length) == 1) {
-        //    printf("Length = %d\n", length);
-        //}
+        if (sscanf(buf, "Content-Length: %d ", &length) == 1) {
+            printf("Length = %d\n", length);
+        }
     }
     
     // Read and display the HTTP Body 
-    n = read_or_die(fd, buf, MAXBUF);
-    while (n > 0) {
+    n = 0;
+    while (n < length) {
+        n += read_or_die(fd, buf, MAXBUF);
         printf("%s", buf);
-        n = read_or_die(fd, buf, MAXBUF);
     }
 }
 
